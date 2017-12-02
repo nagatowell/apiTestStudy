@@ -44,8 +44,6 @@ class Kernel extends HttpKernel
         ],
 
         'closeapi' => [
-            'throttle:60,1',
-            'bindings',
             'api.token',
         ],
     ];

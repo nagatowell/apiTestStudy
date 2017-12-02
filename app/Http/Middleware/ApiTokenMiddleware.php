@@ -16,7 +16,8 @@ class ApiTokenMiddleware
      */
     public function handle($request, Closure $next)
     {
-        $acc = Access::where('api_token', $request->bearerToken())->first();
+        $acc = Access::where('api_token', $request->bearerToken())
+            ->where('date', date('Y/m/d'))->first();
 
         if(!empty($acc)){
             return $next($request);

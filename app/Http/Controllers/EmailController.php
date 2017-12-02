@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Email;
 use Illuminate\Http\Request;
 
 class EmailController extends Controller
@@ -34,7 +35,23 @@ class EmailController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $email = new Email();
+        if(!empty($request->email) && !empty($request->message) && !empty($request->company_token)){
+            $email->name = $request->name;
+            $email->message = $request->message;
+            $email->email = $request->email;
+            $email->from = $request->from;
+            $email->from_name = $request->from_name;
+            $email->status = 200;
+            $email->company_token = $request->company_token;
+            $email->tracking = $request->tracking;
+            $email->sent_date = date('Y/m/d');
+            $email->save();
+
+            return response()->json($email, 201);
+        }else{
+            return response()->json(['info' => 'Email, Message or Company Token empty'], 400);
+        }
     }
 
     /**
@@ -80,5 +97,21 @@ class EmailController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function allEmailCompany(Request $request){
+        $email = Email::where('company_token', $request->company_token)->get();
+        if (!empty($email)) {
+            return response()->json($email, 200);
+        }
+        return response()->json([], 404);
+    }
+
+    public function statusEmail(Request $request){
+        $email = Email::where('_id', $request->id)->first();
+        if (!empty($email)) {
+            return response()->json($email, 200);
+        }
+        return response()->json([], 404);
     }
 }

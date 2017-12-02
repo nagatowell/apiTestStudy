@@ -13,7 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
+Route::post('/email/all', 'EmailController@allEmailCompany')->middleware('closeapi');
+Route::post('/email/info', 'EmailController@statusEmail')->middleware('closeapi');
 Route::resource('email', 'EmailController')->middleware('closeapi');
+
 Route::resource('access', 'AccessController');
 
 
