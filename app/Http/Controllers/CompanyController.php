@@ -40,6 +40,12 @@ class CompanyController extends Controller
         if( empty($request->company_name) && empty($request->company_email)){
             return response()->json(['status' => 400, 'info' => 'Invalid requests, check params'], 400);
         }
+        
+        $company_check = Company::where('company_email', $request->company_email)->first();
+        if(!empty($company_check)){
+            return response()->json($company, 200);
+        }
+        
         $company->company_name = $request->company_name;
         $company->company_email = $request->company_email;
         $company->company_token = bin2hex(random_bytes(60));
@@ -71,7 +77,21 @@ class CompanyController extends Controller
      */
     public function edit($id)
     {
-        //
+        $company = Company::where('_id', $id)->first();
+
+        if( empty($request->company_name) && empty($request->company_email)){
+            return response()->json(['status' => 400, 'info' => 'Invalid requests, check params'], 400);
+        }
+
+        if(empty($company)){
+            return response()->json(['status' => 404, 'info' => 'Not Found'], 404);
+        }
+        $company->company_name = $request->company_name;
+        $company->company_email = $request->company_email;
+        $company->company_token = bin2hex(random_bytes(60));
+        $company->save();
+
+        return response()->json($company, 200);
     }
 
     /**
