@@ -43,9 +43,9 @@ class CompanyController extends Controller
         
         $company_check = Company::where('company_email', $request->company_email)->first();
         if(!empty($company_check)){
-            return response()->json($company, 200);
+            return response()->json($company_check, 200);
         }
-        
+
         $company->company_name = $request->company_name;
         $company->company_email = $request->company_email;
         $company->company_token = bin2hex(random_bytes(60));
