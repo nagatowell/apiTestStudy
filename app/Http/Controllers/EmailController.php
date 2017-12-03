@@ -37,10 +37,10 @@ class EmailController extends Controller
     {
         $email = new Email();
         if(!empty($request->email) && !empty($request->message) && !empty($request->company_token)){
-            $email->name = $request->name;
+            $email->name_to = $request->name_to;
             $email->message = $request->message;
-            $email->email = $request->email;
-            $email->from = $request->from;
+            $email->email_to = $request->email_to;
+            $email->from_email = $request->from_email;
             $email->from_name = $request->from_name;
             $email->status = 200;
             $email->subject = $request->subject;
