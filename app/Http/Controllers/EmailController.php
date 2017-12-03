@@ -43,6 +43,7 @@ class EmailController extends Controller
             $email->from = $request->from;
             $email->from_name = $request->from_name;
             $email->status = 200;
+            $email->subject = $request->subject;
             $email->company_token = $request->company_token;
             $email->tracking = $request->tracking;
             $email->sent_date = date('Y/m/d');

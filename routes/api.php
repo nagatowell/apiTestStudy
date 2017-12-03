@@ -21,6 +21,7 @@ Route::post('/sms/all', 'SmsController@allSmsCompany')->middleware('closeapi');
 Route::post('/sms/info', 'SmsController@statusSms')->middleware('closeapi');
 Route::resource('sms', 'SmsController')->middleware('closeapi');
 
+Route::get('/access/valid', 'AccessController@isValid');
 Route::resource('access', 'AccessController');
 
 

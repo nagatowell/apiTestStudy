@@ -52,7 +52,12 @@ class AccessController extends Controller
                 $data = ['api_token' => $acc->api_token];
                 return response()->json($data, 200);
             }
+            return response()->json(['info' => 'Company not found', 
+                'status' => 404], 200);
         }
+        return response()->json(['info' => 'Invalid Bearer', 
+            'status' => 400], 200);
+        
     }
 
     /**
@@ -98,5 +103,17 @@ class AccessController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function isValid($token){
+        $acc = Access::where('api_token', $token)->first();
+
+        if(!empty($acc)){
+            return response()->json(['info' => 'Valid Token', 
+            'status' => 200], 200);
+        }else{
+            return response()->json(['info' => 'Invalid Token', 
+            'status' => 404], 404);
+        }
     }
 }
