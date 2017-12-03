@@ -41,10 +41,12 @@ class AccessController extends Controller
         if(!empty($company_token)){
             $company = Company::where('company_token', $company_token)->first();
             if(!empty($company)){
-                $acc = Access::where('date', date('Y/m/d'))->first();
+                $acc = Access::where('date', date('Y/m/d'))
+                    ->where('company_token', $company_token)
+                    ->first();
                 if(empty($acc)){
                     $acc = new Access();
-                    $acc->company = $company;
+                    $acc->company_token = $company->company_token;
                     $acc->date = date('Y/m/d');
                     $acc->api_token = bin2hex(random_bytes(60));
                     $acc->save();
