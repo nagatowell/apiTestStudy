@@ -36,7 +36,7 @@ class EmailController extends Controller
     public function store(Request $request)
     {
         $email = new Email();
-        if(!empty($request->email) && !empty($request->message) && !empty($request->company_token)){
+        if(!empty($request->email_to) && !empty($request->message) && !empty($request->company_token)){
             $email->name_to = $request->name_to;
             $email->message = $request->message;
             $email->email_to = $request->email_to;
