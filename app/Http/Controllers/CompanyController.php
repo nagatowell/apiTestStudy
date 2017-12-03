@@ -77,8 +77,20 @@ class CompanyController extends Controller
      */
     public function edit($id)
     {
-        $company = Company::where('_id', $id)->first();
+        //
+    }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $company = Company::where('_id', $id)->first();
+        
         if( empty($request->company_name) && empty($request->company_email)){
             return response()->json(['status' => 400, 'info' => 'Invalid requests, check params'], 400);
         }
@@ -92,18 +104,6 @@ class CompanyController extends Controller
         $company->save();
 
         return response()->json($company, 200);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**
