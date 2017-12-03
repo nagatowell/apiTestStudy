@@ -55,7 +55,7 @@ class AccessController extends Controller
                 return response()->json($data, 200);
             }
             return response()->json(['info' => 'Company not found', 
-                'status' => 404], 200);
+                'status' => 404], 404);
         }
         return response()->json(['info' => 'Invalid Bearer', 
             'status' => 400], 400);
