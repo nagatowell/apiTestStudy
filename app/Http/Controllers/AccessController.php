@@ -58,7 +58,7 @@ class AccessController extends Controller
                 'status' => 404], 200);
         }
         return response()->json(['info' => 'Invalid Bearer', 
-            'status' => 400], 200);
+            'status' => 400], 400);
         
     }
 
