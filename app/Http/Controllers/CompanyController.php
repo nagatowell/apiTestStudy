@@ -100,7 +100,6 @@ class CompanyController extends Controller
         }
         $company->company_name = $request->company_name;
         $company->company_email = $request->company_email;
-        $company->company_token = bin2hex(random_bytes(60));
         $company->save();
 
         return response()->json($company, 200);
