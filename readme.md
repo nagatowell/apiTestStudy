@@ -56,3 +56,88 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+
+## Documentation
+
+### Create a company ###
+
+- POST /api/company
+
+
+#### Header ####
+
+Content-Type	application/json
+
+```php
+$data = [
+    'company_name' =>$request->nome,
+    'company_email'=>$request->email
+];
+$data = json_encode($data);
+```
+
+#### Return ####
+
+Returns 201, if existing company, return is a company and status code 200
+
+```php
+{"company_name":"Exemple","company_email":"Exemple@exemple.com","company_token":"9fcb53ebe7863d8e34c1fe8fb31d993c8dd8f3835fbf392c9c81b537605f40bdc67378bde3c6ca41ce0c8a3c8092541bcd7ef983011091302efcc58f","updated_at":"2017-11-30 02:00:35","created_at":"2017-11-30 02:00:35","_id":"5a1f66431ff06100062fa955"}
+```
+#### Curl ####
+
+Remember that you need to make an API connection through the curl
+
+```php
+<?php
+namespace App\Helper;
+class WebRequest{
+   public static function postData($url, $data, $metodo){       
+       $curl = curl_init();
+             
+       curl_setopt_array($curl, array(
+         CURLOPT_URL => $url,
+         CURLOPT_RETURNTRANSFER => true,
+         CURLOPT_ENCODING => "",
+         CURLOPT_MAXREDIRS => 10,
+         CURLOPT_TIMEOUT => 30,
+         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+         CURLOPT_CUSTOMREQUEST => $metodo,
+         CURLOPT_POSTFIELDS => $data,
+         CURLOPT_HTTPHEADER => array(
+           "cache-control: no-cache",
+           "content-type: application/json",
+         ),
+       ));
+      
+       $response = curl_exec($curl);
+ $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+       $err = curl_error($curl);
+      
+       curl_close($curl);
+      
+       return json_decode($response);
+   }
+```
+### Edit a company ###
+
+- PUT api/company/{company_id}
+
+#### Header ####
+
+Content-Type	application/json
+
+```php
+$data = [
+    'company_name' =>$request->nome,
+    'company_email'=>$request->email
+];
+$data = json_encode($data);
+```
+
+#### Return ####
+
+Returns the Company with updated data
+
+```php
+{"company_name":"Exemple","company_email":"Exemple@exemple.com","company_token":"9fcb53ebe7863d8e34c1fe8fb31d993c8dd8f3835fbf392c9c81b537605f40bdc67378bde3c6ca41ce0c8a3c8092541bcd7ef983011091302efcc58f","updated_at":"2017-11-30 02:00:35","created_at":"2017-11-30 02:00:35","_id":"5a1f66431ff06100062fa955"}
+```
