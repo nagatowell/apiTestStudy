@@ -83,9 +83,36 @@ Returns 201, if existing company, return is a company and status code 200
 ```php
 {"company_name":"Exemple","company_email":"Exemple@exemple.com","company_token":"9fcb53ebe7863d8e34c1fe8fb31d993c8dd8f3835fbf392c9c81b537605f40bdc67378bde3c6ca41ce0c8a3c8092541bcd7ef983011091302efcc58f","updated_at":"2017-11-30 02:00:35","created_at":"2017-11-30 02:00:35","_id":"5a1f66431ff06100062fa955"}
 ```
-#### Curl ####
 
-Remember that you need to make an API connection through the curl
+
+### Edit a company ###
+
+- PUT api/company/{company_id}
+
+#### Header ####
+
+Content-Type	application/json
+
+```php
+$data = [
+    'company_name' =>$request->nome,
+    'company_email'=>$request->email
+];
+$data = json_encode($data);
+```
+
+#### Return ####
+
+Returns the Company with updated data
+
+```php
+{"company_name":"Exemple","company_email":"Exemple@exemple.com","company_token":"9fcb53ebe7863d8e34c1fe8fb31d993c8dd8f3835fbf392c9c81b537605f40bdc67378bde3c6ca41ce0c8a3c8092541bcd7ef983011091302efcc58f","updated_at":"2017-11-30 02:00:35","created_at":"2017-11-30 02:00:35","_id":"5a1f66431ff06100062fa955"}
+```
+### API connection ###
+Remember that you need to make an API connection through the curl, there are two types of connection
+
+##### Curl without API Token #####
+This connection is used to access the API without the API Token,it can be used to create a new company and edit a company
 
 ```php
 <?php
@@ -118,26 +145,181 @@ class WebRequest{
        return json_decode($response);
    }
 ```
-### Edit a company ###
+##### Curl API Token #####
 
-- PUT api/company/{company_id}
+This connection is used to access the API with the API Token, it can be used to send emails, sms, search information about them
+
+```php
+public static function authPostData($url, $data, $metodo, $chave){       
+       $curl = curl_init();
+             
+       curl_setopt_array($curl, array(
+         CURLOPT_URL => $url,
+         CURLOPT_RETURNTRANSFER => true,
+         CURLOPT_ENCODING => "",
+         CURLOPT_MAXREDIRS => 10,
+         CURLOPT_TIMEOUT => 30,
+         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+         CURLOPT_CUSTOMREQUEST => $metodo,
+         CURLOPT_POSTFIELDS => $data,
+         CURLOPT_HTTPHEADER => array(
+           "cache-control: no-cache",
+           "content-type: application/json",
+  		"authorization: Bearer $chave",
+
+         ),
+       ));
+      
+       $response = curl_exec($curl);
+ $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+       $err = curl_error($curl);
+      
+       curl_close($curl);
+      
+       return json_decode($response);
+   }
+```
+
+Obs: it can also be used to get the api token
+
+### Send Email ###
+
+- POST api/email
 
 #### Header ####
 
 Content-Type	application/json
 
+Authorization	Bearer {api_token}
+
 ```php
-$data = [
-    'company_name' =>$request->nome,
-    'company_email'=>$request->email
-];
-$data = json_encode($data);
+        $data = [
+            'name_to'=> "",
+            'email_to'=> $request->email ,
+            'message'=> $request->texto,
+            'subject'=> "",
+            'from_email'=> "",
+            'from_name'=> "",
+            'company_token'=> $request->company_token,
+            'tracking'=> ""
+            
+        ];  
+        $data =  json_encode($data);
 ```
 
 #### Return ####
 
-Returns the Company with updated data
+Return  status code 201, if email is sent
+
+### Send SMS ###
+
+- POST api/sms
+
+#### Header ####
+
+Content-Type	application/json
+
+Authorization	Bearer {api_token}
 
 ```php
-{"company_name":"Exemple","company_email":"Exemple@exemple.com","company_token":"9fcb53ebe7863d8e34c1fe8fb31d993c8dd8f3835fbf392c9c81b537605f40bdc67378bde3c6ca41ce0c8a3c8092541bcd7ef983011091302efcc58f","updated_at":"2017-11-30 02:00:35","created_at":"2017-11-30 02:00:35","_id":"5a1f66431ff06100062fa955"}
+        $data = [
+            'message'=> $request->texto,
+            'phone_number'=>  $request->telefone_number,
+            'company_token'=> $request->company_token,
+            'tracking'=> ""
+            
+        ];
+        $data =  json_encode($data);
 ```
+
+#### Return ####
+
+Return  status code 201, if sms is sent
+
+### List all Emails ###
+
+- POST api/email/all
+
+#### Header ####
+
+Content-Type	application/json
+
+Authorization	Bearer {api_token}
+
+```php
+        $data = [
+            'company_token' => $company_token  
+        ];
+        $data =  json_encode( $data);
+ ```
+ #### Return ####
+
+Return  status code 200, return all emails
+
+### List all SMS ###
+
+- POST api/sms/all
+
+#### Header ####
+
+Content-Type	application/json
+
+Authorization	Bearer {api_token}
+
+```php
+        $data = [
+            'company_token' => $company_token  
+        ];
+        $data =  json_encode( $data);
+ ```
+ #### Return ####
+
+Return  status code 200, return all Sms
+
+### Get an email info ###
+
+- POST  api/email/info
+
+#### Header ####
+
+Content-Type	application/json
+
+Authorization	Bearer {api_token}
+
+```php
+        $data = [
+            'id' => $id 
+        ];
+        $data =  json_encode( $data);
+ ```
+ #### Return ####
+
+Return  status code 200 and email info, if there is id
+
+### Get an SMS info ###
+
+- POST  api/sms/info
+
+#### Header ####
+
+Content-Type	application/json
+
+Authorization	Bearer {api_token}
+
+```php
+        $data = [
+            'id' => $id 
+        ];
+        $data =  json_encode( $data);
+ ```
+ #### Return ####
+
+Return  status code 200 and SMS info, if there is id
+
+### API Token valid ###
+
+- GET api/access/valid/{api_token}
+
+#### Return ####
+
+Return status code 200, if api token is valid, else return 404
